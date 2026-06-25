@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 bevy = { version = "0.18.1", features = ["free_camera"] }
 bevy_rapier3d = "0.34.0"
+rand = "0.10.1"

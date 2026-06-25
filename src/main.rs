@@ -5,15 +5,12 @@ use bevy::{
 
 use bevy_rapier3d::prelude::*;
 
-use crate::{
+use crate::game::{
     crosshair::crosshair::CrossHairPlugin, level::level::LevelPlugin, player::player::PlayerPlugin,
     targets::target::TargetPlugin,
 };
 
-mod crosshair;
-mod level;
-mod player;
-mod targets;
+mod game;
 
 fn main() {
     App::new()

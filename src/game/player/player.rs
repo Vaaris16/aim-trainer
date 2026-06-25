@@ -1,9 +1,10 @@
 use bevy::{
     camera_controller::free_camera::FreeCamera, core_pipeline::tonemapping::Tonemapping,
-    input::keyboard::NativeKeyCode, log::tracing_subscriber::layer::Filter,
-    post_process::bloom::Bloom, prelude::*, render::view::Hdr,
+    input::keyboard::NativeKeyCode, post_process::bloom::Bloom, prelude::*, render::view::Hdr,
 };
 use bevy_rapier3d::prelude::*;
+
+use crate::game::targets::target::{Target, manage_targets};
 
 pub struct PlayerPlugin;
 
@@ -35,19 +36,14 @@ fn init_player(mut commands: Commands) {
             ..Default::default()
         },
     ));
-    commands.spawn((
-        DirectionalLight {
-            illuminance: 100000.,
-            ..Default::default()
-        },
-        Transform::from_xyz(2., 2., 0.).looking_to(Vec3::X, Vec3::Y),
-    ));
 }
 
 fn update_player(
     mouse_input: Res<ButtonInput<MouseButton>>,
     context: ReadRapierContext,
+    commands: Commands,
     player: Query<&GlobalTransform, With<Player>>,
+    target_query: Query<Entity, With<Target>>,
 ) {
     if !mouse_input.just_pressed(MouseButton::Right) {
         return;
@@ -72,7 +68,7 @@ fn update_player(
             .cast_ray(ray_origin, ray_dir, max_toi, solid, filter)
         {
             let hit_point = origin + *dir * toi;
-            println!("Middle click hit entity: {:?} at {:?}", entity, hit_point);
+            manage_targets(commands, target_query, entity);
         }
     }
 }
