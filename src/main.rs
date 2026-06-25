@@ -1,15 +1,19 @@
 use bevy::{
-    camera::Hdr,
     camera_controller::free_camera::{FreeCamera, FreeCameraPlugin},
-    core_pipeline::tonemapping::Tonemapping,
-    input::keyboard::NativeKeyCode,
-    post_process::bloom::Bloom,
     prelude::*,
 };
 
-use crate::player::player::{Player, PlayerPlugin};
+use bevy_rapier3d::prelude::*;
 
+use crate::{
+    crosshair::crosshair::CrossHairPlugin, level::level::LevelPlugin, player::player::PlayerPlugin,
+    target::target::TargetPlugin,
+};
+
+mod crosshair;
+mod level;
 mod player;
+mod target;
 
 fn main() {
     App::new()
@@ -25,45 +29,12 @@ fn main() {
             }),
             ..Default::default()
         }))
+        .add_plugins(RapierPhysicsPlugin::<NoUserData>::default())
+        .add_plugins(RapierDebugRenderPlugin::default())
         .add_plugins(FreeCameraPlugin)
+        .add_plugins(TargetPlugin)
         .add_plugins(PlayerPlugin)
-        .add_systems(Startup, setup)
+        .add_plugins(CrossHairPlugin)
+        .add_plugins(LevelPlugin)
         .run();
-}
-
-fn setup(mut commands: Commands, asset_server: ResMut<AssetServer>) {
-    add_container(&mut commands, asset_server);
-}
-
-fn add_crosshair(commands: &mut Commands) {
-    commands
-        .spawn(
-            (Node {
-                position_type: PositionType::Absolute,
-                width: Val::Px(100.),
-                height: Val::Px(100.),
-                justify_items: JustifyItems::Center,
-                align_items: AlignItems::Center,
-                ..Default::default()
-            }),
-        )
-        .with_children(|parent| {
-            parent.spawn((
-                Node {
-                    width: Val::Px(6.),
-                    height: Val::Px(6.),
-                    justify_items: JustifyItems::Center,
-                    align_items: AlignItems::Center,
-                    ..Default::default()
-                },
-                BackgroundColor(Color::srgb(0.0, 0.9, 1.0)), // Cyan tint matching your neon accents
-            ));
-        });
-}
-
-fn add_container(mut commands: &mut Commands, asset_server: ResMut<AssetServer>) {
-    commands.spawn((
-        WorldAssetRoot(asset_server.load("models/MainBox/main_box.glb#Scene0")),
-        Transform::from_xyz(0., 0., 0.),
-    ));
 }
