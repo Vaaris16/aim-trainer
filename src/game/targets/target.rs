@@ -60,7 +60,6 @@ fn spawn_target(
     let mut rand = rand::rng();
     for _ in 0..grid.max_targets {
         let pos = grid.get_target_pos(&mut rand);
-        println!("{:?}", pos);
         commands.spawn((
             Mesh3d(meshes.add(Sphere::new(0.25))),
             MeshMaterial3d(materials.add(StandardMaterial {
@@ -70,7 +69,6 @@ fn spawn_target(
             Collider::ball(0.25),
             Target,
             Transform::from_xyz(pos.x, pos.y, pos.z),
-            //Transform::from_xyz(15., 0.5, 1.3),
         ));
     }
 }
