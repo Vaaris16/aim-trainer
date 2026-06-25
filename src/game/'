@@ -44,10 +44,10 @@ impl Grid {
             + (Vec2::Y * 0.5))
             * self.cell_size;
 
-        let y = grid_pos.y.clamp(0.5, 3.3);
-        let z = grid_pos.x.clamp(-1.6, 1.3);
+        let y = grid_pos.y.clamp(2.5, 3.5);
+        let z = grid_pos.y.clamp(2.5, 3.5);
 
-        Vec3::new(15., y, z)
+        Vec3::new(15., y, grid_pos.x)
     }
 }
 
@@ -69,8 +69,8 @@ fn spawn_target(
             })),
             Collider::ball(0.25),
             Target,
-            Transform::from_xyz(pos.x, pos.y, pos.z),
-            //Transform::from_xyz(15., 0.5, 1.3),
+            //Transform::from_xyz(pos.x, pos.y, pos.z),
+            Transform::from_xyz(15., 3.4, 1.4),
         ));
     }
 }
