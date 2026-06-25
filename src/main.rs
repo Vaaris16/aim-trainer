@@ -7,13 +7,13 @@ use bevy_rapier3d::prelude::*;
 
 use crate::{
     crosshair::crosshair::CrossHairPlugin, level::level::LevelPlugin, player::player::PlayerPlugin,
-    target::target::TargetPlugin,
+    targets::target::TargetPlugin,
 };
 
 mod crosshair;
 mod level;
 mod player;
-mod target;
+mod targets;
 
 fn main() {
     App::new()
