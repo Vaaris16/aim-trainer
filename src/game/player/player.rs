@@ -4,7 +4,10 @@ use bevy::{
 };
 use bevy_rapier3d::prelude::*;
 
-use crate::game::targets::target::{Target, manage_targets};
+use crate::game::{
+    targets::target::{Target, manage_targets},
+    ui::score::score::{Score, ScoreText},
+};
 
 pub struct PlayerPlugin;
 
@@ -44,6 +47,8 @@ fn update_player(
     commands: Commands,
     player: Query<&GlobalTransform, With<Player>>,
     target_query: Query<Entity, With<Target>>,
+    score_text: Query<&mut Text, With<ScoreText>>,
+    mut score_query: ResMut<Score>,
 ) {
     if !mouse_input.just_pressed(MouseButton::Right) {
         return;
@@ -68,7 +73,7 @@ fn update_player(
             .cast_ray(ray_origin, ray_dir, max_toi, solid, filter)
         {
             let hit_point = origin + *dir * toi;
-            manage_targets(commands, target_query, entity);
+            manage_targets(commands, target_query, entity, score_text, score_query);
         }
     }
 }

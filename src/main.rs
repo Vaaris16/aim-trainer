@@ -1,21 +1,21 @@
-use bevy::{
-    camera_controller::free_camera::{FreeCamera, FreeCameraPlugin},
-    prelude::*,
-};
+use bevy::{camera_controller::free_camera::FreeCameraPlugin, prelude::*, window::WindowMode};
 
 use bevy_rapier3d::prelude::*;
 
 use crate::game::{
-    crosshair::crosshair::CrossHairPlugin, level::level::LevelPlugin, player::player::PlayerPlugin,
-    targets::target::TargetPlugin,
+    level::level::LevelPlugin, player::player::PlayerPlugin, targets::target::TargetPlugin,
+    ui::ui::UiPlugin,
 };
 
 mod game;
 
+pub const MAIN_COLOR_PURPLE: Color = Color::hsla(264.0, 0.76, 0.81, 1.0);
+pub const ACCENT_COLOR: Color = Color::hsla(290.0, 0.64, 0.55, 1.0);
+
 fn main() {
     App::new()
         .insert_resource(GlobalAmbientLight {
-            color: Color::hsla(264.0, 0.76, 0.81, 1.0),
+            color: MAIN_COLOR_PURPLE,
             brightness: 50.,
             ..Default::default()
         })
@@ -27,11 +27,10 @@ fn main() {
             ..Default::default()
         }))
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::default())
-        .add_plugins(RapierDebugRenderPlugin::default())
         .add_plugins(FreeCameraPlugin)
         .add_plugins(TargetPlugin)
         .add_plugins(PlayerPlugin)
-        .add_plugins(CrossHairPlugin)
+        .add_plugins(UiPlugin)
         .add_plugins(LevelPlugin)
         .run();
 }

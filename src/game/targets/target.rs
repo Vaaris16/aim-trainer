@@ -2,6 +2,8 @@ use bevy::{gizmos::grid, prelude::*, winit::UpdateMode};
 use bevy_rapier3d::geometry::Collider;
 use rand::{Rng, RngExt, rngs::ThreadRng};
 
+use crate::game::ui::score::score::{Score, ScoreText, update_score};
+
 pub struct TargetPlugin;
 
 impl Plugin for TargetPlugin {
@@ -51,21 +53,12 @@ impl Grid {
     }
 }
 
-fn spawn_target(
-    mut meshes: ResMut<Assets<Mesh>>,
-    grid: Res<Grid>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    mut commands: Commands,
-) {
+fn spawn_target(grid: Res<Grid>, asset_server: Res<AssetServer>, mut commands: Commands) {
     let mut rand = rand::rng();
     for _ in 0..grid.max_targets {
         let pos = grid.get_target_pos(&mut rand);
         commands.spawn((
-            Mesh3d(meshes.add(Sphere::new(0.25))),
-            MeshMaterial3d(materials.add(StandardMaterial {
-                base_color: Color::WHITE,
-                ..Default::default()
-            })),
+            SceneRoot(asset_server.load("models/Target/target.glb#Scene0")),
             Collider::ball(0.25),
             Target,
             Transform::from_xyz(pos.x, pos.y, pos.z),
@@ -77,9 +70,11 @@ pub fn manage_targets(
     mut commands: Commands,
     targets: Query<Entity, With<Target>>,
     entity: Entity,
+    score_text: Query<&mut Text, With<ScoreText>>,
+    score_query: ResMut<Score>,
 ) {
     if targets.get(entity).is_ok() {
-        println!("hittt");
+        update_score(score_text, score_query);
         commands.entity(entity).insert(DeadTarget);
     }
 }
@@ -97,7 +92,6 @@ fn manage_dead_targets(
         if new_pos == transform.translation {
             transform.translation = grid.get_target_pos(&mut rand);
         }
-
         transform.translation = new_pos;
 
         commands.entity(entity).remove::<DeadTarget>();
