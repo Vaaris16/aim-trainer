@@ -4,17 +4,24 @@ use bevy::{
 };
 use bevy_rapier3d::prelude::*;
 
-use crate::game::{
-    targets::target::{Target, manage_targets},
-    ui::score::score::{Score, ScoreText},
+use crate::{
+    GameState,
+    game::{
+        targets::target::{Target, manage_targets},
+        ui::score::score::{Score, ScoreText},
+    },
 };
+
+#[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]
+struct PlayerSet;
 
 pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, init_player)
-            .add_systems(Update, update_player);
+        app.configure_sets(Update, PlayerSet.run_if(in_state(GameState::Game)));
+        app.add_systems(OnEnter(GameState::Game), init_player.in_set(PlayerSet))
+            .add_systems(Update, make_ray.in_set(PlayerSet));
     }
 }
 
@@ -41,14 +48,14 @@ fn init_player(mut commands: Commands) {
     ));
 }
 
-fn update_player(
+fn make_ray(
     mouse_input: Res<ButtonInput<MouseButton>>,
     context: ReadRapierContext,
     commands: Commands,
     player: Query<&GlobalTransform, With<Player>>,
     target_query: Query<Entity, With<Target>>,
     score_text: Query<&mut Text, With<ScoreText>>,
-    mut score_query: ResMut<Score>,
+    score_query: ResMut<Score>,
 ) {
     if !mouse_input.just_pressed(MouseButton::Right) {
         return;

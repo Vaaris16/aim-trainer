@@ -2,15 +2,22 @@ use bevy::{gizmos::grid, prelude::*, winit::UpdateMode};
 use bevy_rapier3d::geometry::Collider;
 use rand::{Rng, RngExt, rngs::ThreadRng};
 
-use crate::game::ui::score::score::{Score, ScoreText, update_score};
+use crate::{
+    GameState,
+    game::ui::score::score::{Score, ScoreText, update_score},
+};
+
+#[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]
+struct TargetSet;
 
 pub struct TargetPlugin;
 
 impl Plugin for TargetPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_target)
-            .insert_resource(Grid::default())
-            .add_systems(Update, manage_dead_targets);
+        app.configure_sets(Update, TargetSet.run_if(in_state(GameState::Game)));
+        app.add_systems(OnEnter(GameState::Game), spawn_target)
+            .add_systems(Update, manage_dead_targets.in_set(TargetSet))
+            .insert_resource(Grid::default());
     }
 }
 

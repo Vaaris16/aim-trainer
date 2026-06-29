@@ -1,10 +1,16 @@
 use bevy::prelude::*;
 
+use crate::GameState;
+
+#[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]
+struct LevelSet;
+
 pub struct LevelPlugin;
 
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_box);
+        app.configure_sets(Update, LevelSet.run_if(in_state(GameState::Game)));
+        app.add_systems(OnEnter(GameState::Game), spawn_box.in_set(LevelSet));
     }
 }
 

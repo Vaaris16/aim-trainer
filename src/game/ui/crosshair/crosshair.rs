@@ -18,8 +18,8 @@ pub fn spawn_crosshair(assets_server: ResMut<AssetServer>, mut commands: Command
         .with_children(|parent| {
             parent.spawn((
                 Node {
-                    width: Val::Px(20.),
-                    height: Val::Px(20.),
+                    width: Val::Px(30.),
+                    height: Val::Px(30.),
                     ..Default::default()
                 },
                 ImageNode::new(assets_server.load("crosshair.png")),
