@@ -40,7 +40,6 @@ pub fn spawn_score(mut commands: Commands) {
             BoxShadow(vec![ShadowStyle {
                 color: ACCENT_COLOR,
                 spread_radius: px(0.5),
-
                 x_offset: px(0),
                 y_offset: px(0),
                 ..Default::default()
@@ -50,7 +49,7 @@ pub fn spawn_score(mut commands: Commands) {
             parent.spawn((
                 Text::new("0"),
                 TextFont {
-                    font_size: 48.,
+                    font_size: FontSize::Px(48.),
                     ..Default::default()
                 },
                 ScoreText,

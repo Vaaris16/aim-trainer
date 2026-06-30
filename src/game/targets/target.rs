@@ -1,5 +1,5 @@
+use avian3d::collision::collider::Collider;
 use bevy::{gizmos::grid, prelude::*, winit::UpdateMode};
-use bevy_rapier3d::geometry::Collider;
 use rand::{Rng, RngExt, rngs::ThreadRng};
 
 use crate::{
@@ -65,8 +65,8 @@ fn spawn_target(grid: Res<Grid>, asset_server: Res<AssetServer>, mut commands: C
     for _ in 0..grid.max_targets {
         let pos = grid.get_target_pos(&mut rand);
         commands.spawn((
-            SceneRoot(asset_server.load("models/TargetModel/target_model.glb#Scene0")),
-            Collider::ball(0.25),
+            WorldAssetRoot(asset_server.load("models/TargetModel/target_model.glb#Scene0")),
+            Collider::sphere(0.25),
             Target,
             Transform::from_xyz(pos.x, pos.y, pos.z),
         ));

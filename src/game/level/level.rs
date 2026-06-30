@@ -16,7 +16,7 @@ impl Plugin for LevelPlugin {
 
 fn spawn_box(mut commands: Commands, asset_server: ResMut<AssetServer>) {
     commands.spawn((
-        SceneRoot(asset_server.load("models/MainBox/main_box.glb#Scene0")),
+        WorldAssetRoot(asset_server.load("models/MainBox/main_box.glb#Scene0")),
         Transform::from_xyz(0., 0., 0.),
     ));
 }

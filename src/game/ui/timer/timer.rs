@@ -47,13 +47,13 @@ fn spawn_timer(mut commands: Commands) {
                 ..Default::default()
             },
             BorderColor::all(ACCENT_COLOR),
-            BackgroundColor(ACCENT_COLOR),
+            BackgroundColor(Color::BLACK),
         ))
         .with_children(|timer_text| {
             timer_text.spawn((
                 Text::new("15"),
                 TextFont {
-                    font_size: 48.,
+                    font_size: FontSize::Px(48.),
                     ..Default::default()
                 },
                 TimerUi,

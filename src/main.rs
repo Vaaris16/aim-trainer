@@ -1,6 +1,5 @@
+use avian3d::PhysicsPlugins;
 use bevy::{camera_controller::free_camera::FreeCameraPlugin, prelude::*};
-
-use bevy_rapier3d::prelude::*;
 
 use crate::game::game::GamePlugin;
 mod game;
@@ -36,8 +35,8 @@ fn main() {
                 })
                 .set(ImagePlugin::default_nearest()),
         )
-        .add_plugins(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugins(FreeCameraPlugin)
+        .add_plugins(PhysicsPlugins::default())
         .init_state::<GameState>()
         .add_plugins((SplashScreenPlugin, GamePlugin))
         .run();

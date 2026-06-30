@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-bevy = { version = "0.18.1", features = ["free_camera"] }
-bevy_rapier3d = "0.34.0"
+avian3d = "0.7.0"
+bevy = { version = "0.19", features = ["free_camera"] }
 rand = "0.10.1"

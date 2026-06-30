@@ -62,14 +62,14 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                     text.spawn((
                         Text::new("AIM"),
                         TextFont {
-                            font_size: 132.,
+                            font_size: FontSize::Px(132.),
                             ..Default::default()
                         },
                     ));
                     text.spawn((
                         Text::new("Trainer"),
                         TextFont {
-                            font_size: 64.,
+                            font_size: FontSize::Px(64.),
                             ..Default::default()
                         },
                         TextColor(ACCENT_COLOR),
@@ -106,7 +106,7 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                         Text::new("START "),
                         TextColor(Color::WHITE),
                         TextFont {
-                            font_size: 32.,
+                            font_size: FontSize::Px(32.),
                             ..Default::default()
                         },
                     ));
