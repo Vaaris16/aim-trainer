@@ -1,5 +1,15 @@
 use bevy::{core_pipeline::deferred::node, prelude::*, window::PrimaryWindow};
 
+use crate::GameState;
+
+pub struct CrossHairPlugin;
+
+impl Plugin for CrossHairPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(OnEnter(GameState::Game), spawn_crosshair);
+    }
+}
+
 #[derive(Component)]
 pub struct CrossHair;
 

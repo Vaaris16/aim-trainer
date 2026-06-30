@@ -13,8 +13,8 @@ pub const ACCENT_COLOR: Color = Color::hsla(249.0, 0.44, 0.58, 1.0);
 
 #[derive(Default, States, Hash, Debug, PartialEq, Eq, Clone)]
 enum GameState {
-    #[default]
     SplashScreen,
+    #[default]
     Game,
 }
 

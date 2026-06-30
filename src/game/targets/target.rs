@@ -4,7 +4,7 @@ use rand::{Rng, RngExt, rngs::ThreadRng};
 
 use crate::{
     GameState,
-    game::ui::score::score::{Score, ScoreText, update_score},
+    game::ui::score::score::{Score, ScoreText},
 };
 
 #[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]
@@ -65,7 +65,7 @@ fn spawn_target(grid: Res<Grid>, asset_server: Res<AssetServer>, mut commands: C
     for _ in 0..grid.max_targets {
         let pos = grid.get_target_pos(&mut rand);
         commands.spawn((
-            SceneRoot(asset_server.load("models/Target/target.glb#Scene0")),
+            SceneRoot(asset_server.load("models/TargetModel/target_model.glb#Scene0")),
             Collider::ball(0.25),
             Target,
             Transform::from_xyz(pos.x, pos.y, pos.z),
@@ -73,17 +73,9 @@ fn spawn_target(grid: Res<Grid>, asset_server: Res<AssetServer>, mut commands: C
     }
 }
 
-pub fn manage_targets(
-    mut commands: Commands,
-    targets: Query<Entity, With<Target>>,
-    entity: Entity,
-    score_text: Query<&mut Text, With<ScoreText>>,
-    score_query: ResMut<Score>,
-) {
-    if targets.get(entity).is_ok() {
-        update_score(score_text, score_query);
-        commands.entity(entity).insert(DeadTarget);
-    }
+pub fn handle_hit(mut commands: Commands, entity: Entity, mut score_query: ResMut<Score>) {
+    commands.entity(entity).insert(DeadTarget);
+    score_query.0 += 50;
 }
 
 fn manage_dead_targets(

@@ -7,7 +7,7 @@ use bevy_rapier3d::prelude::*;
 use crate::{
     GameState,
     game::{
-        targets::target::{Target, manage_targets},
+        targets::target::{Target, handle_hit},
         ui::score::score::{Score, ScoreText},
     },
 };
@@ -80,7 +80,7 @@ fn make_ray(
             .cast_ray(ray_origin, ray_dir, max_toi, solid, filter)
         {
             let hit_point = origin + *dir * toi;
-            manage_targets(commands, target_query, entity, score_text, score_query);
+            handle_hit(commands, entity, score_query);
         }
     }
 }
