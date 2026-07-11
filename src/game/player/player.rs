@@ -1,8 +1,14 @@
 use avian3d::spatial_query::{self, SpatialQuery, SpatialQueryFilter};
 use bevy::{
-    camera::Hdr, camera_controller::free_camera::FreeCamera,
-    core_pipeline::tonemapping::Tonemapping, input::keyboard::NativeKeyCode,
-    post_process::bloom::Bloom, prelude::*,
+    camera::{CameraMainTextureUsages, Hdr},
+    camera_controller::free_camera::FreeCamera,
+    core_pipeline::tonemapping::Tonemapping,
+    input::keyboard::NativeKeyCode,
+    pbr::AtmosphereSettings,
+    post_process::{bloom::Bloom, msaa_writeback},
+    prelude::*,
+    render::render_resource::TextureUsages,
+    solari::realtime::SolariLighting,
 };
 
 use crate::{
@@ -34,9 +40,10 @@ fn init_player(mut commands: Commands) {
         Player,
         Camera3d::default(),
         Hdr,
-        Transform::from_xyz(2.0, 2.0, 0.0).looking_to(Vec3::X, Vec3::Y),
+        Transform::from_xyz(2.0, 1.5, 0.0).looking_to(Vec3::X, Vec3::Y),
         Bloom::default(),
-        Tonemapping::TonyMcMapface,
+        Tonemapping::BlenderFilmic,
+        AtmosphereSettings::default(),
         FreeCamera {
             key_forward: KeyCode::Unidentified(NativeKeyCode::Unidentified),
             key_up: KeyCode::Unidentified(NativeKeyCode::Unidentified),
@@ -54,15 +61,13 @@ fn make_ray(
     spatial_query: SpatialQuery,
     commands: Commands,
     player: Query<&GlobalTransform, With<Player>>,
-    target_query: Query<Entity, With<Target>>,
-    score_text: Query<&mut Text, With<ScoreText>>,
     score_query: ResMut<Score>,
 ) {
     if !mouse_input.just_pressed(MouseButton::Right) {
         return;
     }
 
-    if let player_trans = player.single().unwrap() {
+    if let Ok(player_trans) = player.single() {
         let origin = player_trans.translation();
         let dir = player_trans.forward();
 

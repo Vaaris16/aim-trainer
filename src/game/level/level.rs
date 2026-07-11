@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, solari::scene::RaytracingMesh3d};
 
 use crate::GameState;
 
@@ -14,9 +14,9 @@ impl Plugin for LevelPlugin {
     }
 }
 
-fn spawn_box(mut commands: Commands, asset_server: ResMut<AssetServer>) {
+fn spawn_box(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
-        WorldAssetRoot(asset_server.load("models/MainBox/main_box.glb#Scene0")),
+        WorldAssetRoot(asset_server.load("models/MainBox/main_box_n.glb#Scene0")),
         Transform::from_xyz(0., 0., 0.),
     ));
 }

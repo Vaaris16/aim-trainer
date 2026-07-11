@@ -1,5 +1,9 @@
 use avian3d::PhysicsPlugins;
-use bevy::{camera_controller::free_camera::FreeCameraPlugin, prelude::*};
+use bevy::{
+    camera_controller::free_camera::FreeCameraPlugin,
+    prelude::*,
+    solari::{SolariPlugins, realtime::SolariLightingPlugin},
+};
 
 use crate::game::game::GamePlugin;
 mod game;
@@ -19,11 +23,6 @@ enum GameState {
 
 fn main() {
     App::new()
-        .insert_resource(GlobalAmbientLight {
-            color: MAIN_COLOR_PURPLE,
-            brightness: 50.,
-            ..Default::default()
-        })
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {

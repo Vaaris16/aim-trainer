@@ -30,7 +30,6 @@ struct TimerUi;
 
 fn tick_timer(time: Res<Time>, mut timer: ResMut<GameTimer>) {
     timer.0.tick(time.delta());
-    println!("{:?}", time.delta());
 }
 
 fn spawn_timer(mut commands: Commands) {
@@ -67,7 +66,6 @@ fn update_timer(game_timer: Res<GameTimer>, timer_ui: Query<&mut Text, With<Time
 
         for mut time in timer_ui {
             time.0 = time_sec.to_string();
-            println!("{}", game_timer.0.remaining_secs());
         }
     }
 }

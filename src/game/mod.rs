@@ -1,3 +1,4 @@
+pub mod atmosphere;
 pub mod game;
 pub mod level;
 pub mod player;
