@@ -1,4 +1,4 @@
-use crate::{ACCENT_COLOR, GameState};
+use crate::{GameState, UI_BACKGROUND_COLOR};
 use bevy::prelude::*;
 
 #[derive(Component)]
@@ -25,27 +25,24 @@ pub fn spawn_score(mut commands: Commands) {
     commands
         .spawn((
             Node {
-                padding: UiRect::all(px(5)),
+                padding: UiRect {
+                    top: px(15),
+                    bottom: px(15),
+                    left: px(30),
+                    right: px(30),
+                },
                 position_type: PositionType::Absolute,
                 top: px(24),
                 right: px(15),
                 justify_content: JustifyContent::Center,
-                align_items: AlignItems::Center,
-                border: UiRect::all(px(1)),
+                flex_direction: FlexDirection::Column,
                 border_radius: BorderRadius::all(px(12)),
                 ..Default::default()
             },
-            BorderColor::all(ACCENT_COLOR),
-            BackgroundColor(Color::BLACK),
-            BoxShadow(vec![ShadowStyle {
-                color: ACCENT_COLOR,
-                spread_radius: px(0.5),
-                x_offset: px(0),
-                y_offset: px(0),
-                ..Default::default()
-            }]),
+            BackgroundColor(UI_BACKGROUND_COLOR),
         ))
         .with_children(|parent| {
+            parent.spawn((Text::new("Score"),));
             parent.spawn((
                 Text::new("0"),
                 TextFont {

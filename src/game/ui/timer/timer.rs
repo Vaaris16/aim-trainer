@@ -2,7 +2,7 @@ use std::{arch::aarch64::int16x4_t, time::Duration};
 
 use bevy::prelude::*;
 
-use crate::{ACCENT_COLOR, GameState};
+use crate::{GameState, UI_BACKGROUND_COLOR};
 
 #[derive(Resource, Debug)]
 struct GameTimer(pub Timer);
@@ -36,19 +36,23 @@ fn spawn_timer(mut commands: Commands) {
     commands
         .spawn((
             Node {
-                padding: UiRect::all(px(5)),
+                padding: UiRect {
+                    top: px(15),
+                    bottom: px(15),
+                    left: px(30),
+                    right: px(30),
+                },
                 top: px(24),
                 left: px(15),
                 justify_content: JustifyContent::Center,
-                align_items: AlignItems::Center,
-                border: UiRect::all(px(1)),
+                flex_direction: FlexDirection::Column,
                 border_radius: BorderRadius::all(px(12.)),
                 ..Default::default()
             },
-            BorderColor::all(ACCENT_COLOR),
-            BackgroundColor(Color::BLACK),
+            BackgroundColor(UI_BACKGROUND_COLOR),
         ))
         .with_children(|timer_text| {
+            timer_text.spawn((Text::new("Time")));
             timer_text.spawn((
                 Text::new("15"),
                 TextFont {

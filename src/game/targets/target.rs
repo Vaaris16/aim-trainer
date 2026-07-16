@@ -1,5 +1,5 @@
 use avian3d::collision::collider::Collider;
-use bevy::{gizmos::grid, prelude::*, winit::UpdateMode};
+use bevy::{gizmos::grid, prelude::*, ui::debug::print_ui_layout_tree, winit::UpdateMode};
 use rand::{Rng, RngExt, rngs::ThreadRng};
 
 use crate::{

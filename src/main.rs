@@ -11,7 +11,7 @@ mod splashscreen;
 
 use splashscreen::splashscreen::SplashScreenPlugin;
 
-pub const MAIN_COLOR_PURPLE: Color = Color::hsla(264.0, 0.76, 0.81, 1.0);
+pub const UI_BACKGROUND_COLOR: Color = Color::hsl(212., 0.25, 0.13);
 pub const ACCENT_COLOR: Color = Color::hsla(249.0, 0.44, 0.58, 1.0);
 
 #[derive(Default, States, Hash, Debug, PartialEq, Eq, Clone)]
