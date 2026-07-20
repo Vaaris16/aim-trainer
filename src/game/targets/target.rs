@@ -1,10 +1,10 @@
 use avian3d::collision::collider::Collider;
-use bevy::{gizmos::grid, prelude::*, ui::debug::print_ui_layout_tree, winit::UpdateMode};
-use rand::{Rng, RngExt, rngs::ThreadRng};
+use bevy::prelude::*;
+use rand::{RngExt, rngs::ThreadRng};
 
 use crate::{
     GameState,
-    game::ui::score::score::{Score, ScoreText},
+    game::ui::score::score::Score,
 };
 
 #[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]

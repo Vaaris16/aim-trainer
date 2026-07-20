@@ -1,11 +1,9 @@
-use bevy::{
-    asset::{AssetsMutIterator, saver::AssetSaver},
-    camera_controller::free_camera::FreeCamera,
-    prelude::*,
-    text::LineHeight,
-};
+use bevy::{prelude::*, text::LetterSpacing};
 
-use crate::{ACCENT_COLOR, GameState, game::player::player::Player};
+use crate::{
+    ACCENT_COLOR, GameState, TEXT_COLOR, UI_BACKGROUND_COLOR,
+    game::utilities::change_free_camera::disable_free_cam,
+};
 
 #[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
 struct SplashSet;
@@ -16,7 +14,7 @@ impl Plugin for SplashScreenPlugin {
     fn build(&self, app: &mut App) {
         app.configure_sets(Update, SplashSet.run_if(in_state(GameState::SplashScreen)));
         app.add_systems(OnEnter(GameState::SplashScreen), spawn_splashscreen)
-            .add_systems(OnEnter(GameState::SplashScreen), spawn_camera)
+            .add_systems(Update, disable_free_cam.in_set(SplashSet))
             .add_systems(OnEnter(GameState::Game), cleanup_splash)
             .add_systems(Update, button_interactions.in_set(SplashSet));
     }
@@ -26,12 +24,11 @@ impl Plugin for SplashScreenPlugin {
 pub struct StartButton;
 
 #[derive(Component)]
-pub struct SplashScreenCamera;
-
-#[derive(Component)]
 struct SplashScreenRoot;
 
 fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>) {
+    let inter_medium: Handle<Font> = assets_server.load("fonts/inter/static/Inter_24pt-Medium.ttf");
+
     commands
         .spawn((
             Node {
@@ -43,7 +40,6 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                 row_gap: px(20),
                 ..Default::default()
             },
-            BackgroundColor(Color::BLACK),
             SplashScreenRoot,
         ))
         .with_children(|parent| {
@@ -63,16 +59,21 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                         Text::new("AIM"),
                         TextFont {
                             font_size: FontSize::Px(132.),
+                            font: FontSource::Handle(inter_medium.clone()),
                             ..Default::default()
                         },
+                        TextColor(TEXT_COLOR),
+                        LetterSpacing::Px(20.),
                     ));
                     text.spawn((
                         Text::new("Trainer"),
                         TextFont {
                             font_size: FontSize::Px(64.),
+                            font: FontSource::Handle(inter_medium.clone()),
                             ..Default::default()
                         },
-                        TextColor(ACCENT_COLOR),
+                        TextColor(TEXT_COLOR),
+                        LetterSpacing::Px(15.),
                     ));
                 });
             // Button
@@ -81,7 +82,7 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                     Node {
                         width: px(300),
                         height: px(75),
-                        border: UiRect::all(px(1)),
+                        border: UiRect::all(px(3)),
                         border_radius: BorderRadius::all(px(10)),
                         flex_direction: FlexDirection::Row,
                         justify_content: JustifyContent::Center,
@@ -89,13 +90,13 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                         ..Default::default()
                     },
                     BorderColor::all(ACCENT_COLOR),
-                    BackgroundColor(Color::BLACK),
+                    BackgroundColor(UI_BACKGROUND_COLOR),
                     Button,
                     StartButton,
                     BoxShadow(vec![ShadowStyle {
                         color: ACCENT_COLOR,
                         spread_radius: px(1),
-                        blur_radius: px(5),
+                        blur_radius: px(1),
                         x_offset: px(0),
                         y_offset: px(0),
                         ..Default::default()
@@ -103,31 +104,19 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                 ))
                 .with_children(|button| {
                     button.spawn((
-                        Text::new("START "),
-                        TextColor(Color::WHITE),
+                        Text::new("START"),
+                        TextColor(TEXT_COLOR),
                         TextFont {
                             font_size: FontSize::Px(32.),
+                            font: FontSource::Handle(inter_medium.clone()),
                             ..Default::default()
                         },
                     ));
-                    button.spawn((ImageNode::new(assets_server.load("arrow.png")),));
                 });
         });
 }
 
-fn spawn_camera(mut commands: Commands) {
-    commands.spawn((Camera2d::default(), SplashScreenCamera));
-}
-
-fn cleanup_splash(
-    mut commands: Commands,
-    splashscreen_cam: Query<Entity, With<SplashScreenCamera>>,
-    splash_screen: Query<Entity, With<SplashScreenRoot>>,
-) {
-    for cam in splashscreen_cam {
-        commands.entity(cam).despawn();
-    }
-
+fn cleanup_splash(mut commands: Commands, splash_screen: Query<Entity, With<SplashScreenRoot>>) {
     for splash_screen in splash_screen {
         commands.entity(splash_screen).despawn();
     }
@@ -137,7 +126,7 @@ fn button_interactions(
     mut state: ResMut<NextState<GameState>>,
     interaction_button: Query<(&Interaction, &mut Node), Changed<Interaction>>,
 ) {
-    for (interaction, mut button_style) in interaction_button {
+    for (interaction, _button_style) in interaction_button {
         match *interaction {
             Interaction::Pressed => {
                 state.set(GameState::Game);

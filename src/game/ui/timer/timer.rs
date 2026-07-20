@@ -1,8 +1,8 @@
-use std::{arch::aarch64::int16x4_t, time::Duration};
+use std::time::Duration;
 
 use bevy::prelude::*;
 
-use crate::{GameState, UI_BACKGROUND_COLOR};
+use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR};
 
 #[derive(Resource, Debug)]
 struct GameTimer(pub Timer);
@@ -21,7 +21,8 @@ impl Plugin for TimerPlugin {
                 TimerMode::Once,
             )))
             .add_systems(Update, update_timer.in_set(TimerSet))
-            .add_systems(Update, tick_timer.in_set(TimerSet));
+            .add_systems(Update, tick_timer.in_set(TimerSet))
+            .add_systems(Update, timer_end.in_set(TimerSet));
     }
 }
 
@@ -46,13 +47,23 @@ fn spawn_timer(mut commands: Commands) {
                 left: px(15),
                 justify_content: JustifyContent::Center,
                 flex_direction: FlexDirection::Column,
+                border: UiRect::all(px(3)),
                 border_radius: BorderRadius::all(px(12.)),
                 ..Default::default()
             },
+            BorderColor::all(ACCENT_COLOR),
+            BoxShadow(vec![ShadowStyle {
+                color: ACCENT_COLOR,
+                spread_radius: px(1),
+                blur_radius: px(5),
+                x_offset: px(0),
+                y_offset: px(0),
+                ..Default::default()
+            }]),
             BackgroundColor(UI_BACKGROUND_COLOR),
         ))
         .with_children(|timer_text| {
-            timer_text.spawn((Text::new("Time")));
+            timer_text.spawn(Text::new("Time"));
             timer_text.spawn((
                 Text::new("15"),
                 TextFont {
@@ -71,5 +82,11 @@ fn update_timer(game_timer: Res<GameTimer>, timer_ui: Query<&mut Text, With<Time
         for mut time in timer_ui {
             time.0 = time_sec.to_string();
         }
+    }
+}
+
+fn timer_end(mut game_state: ResMut<NextState<GameState>>, game_timer: Res<GameTimer>) {
+    if game_timer.0.is_finished() {
+        game_state.set(GameState::EndGame);
     }
 }

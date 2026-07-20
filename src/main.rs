@@ -1,24 +1,24 @@
 use avian3d::PhysicsPlugins;
-use bevy::{
-    camera_controller::free_camera::FreeCameraPlugin,
-    prelude::*,
-    solari::{SolariPlugins, realtime::SolariLightingPlugin},
-};
+use bevy::{camera_controller::free_camera::FreeCameraPlugin, prelude::*};
 
-use crate::game::game::GamePlugin;
+use crate::{end_game::end_game::EndGamePlugin, game::game::GamePlugin};
+
+mod end_game;
 mod game;
 mod splashscreen;
 
 use splashscreen::splashscreen::SplashScreenPlugin;
 
 pub const UI_BACKGROUND_COLOR: Color = Color::hsl(212., 0.25, 0.13);
-pub const ACCENT_COLOR: Color = Color::hsla(249.0, 0.44, 0.58, 1.0);
+pub const ACCENT_COLOR: Color = Color::hsl(199., 0.95, 0.75);
+pub const TEXT_COLOR: Color = Color::WHITE;
 
 #[derive(Default, States, Hash, Debug, PartialEq, Eq, Clone)]
 enum GameState {
-    SplashScreen,
     #[default]
+    SplashScreen,
     Game,
+    EndGame,
 }
 
 fn main() {
@@ -37,6 +37,6 @@ fn main() {
         .add_plugins(FreeCameraPlugin)
         .add_plugins(PhysicsPlugins::default())
         .init_state::<GameState>()
-        .add_plugins((SplashScreenPlugin, GamePlugin))
+        .add_plugins((SplashScreenPlugin, GamePlugin, EndGamePlugin))
         .run();
 }

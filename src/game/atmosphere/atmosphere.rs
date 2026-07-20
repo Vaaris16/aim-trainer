@@ -1,5 +1,5 @@
 use bevy::{
-    light::{Atmosphere, SunDisk, atmosphere::ScatteringMedium},
+    light::{Atmosphere, atmosphere::ScatteringMedium},
     prelude::*,
 };
 
@@ -13,7 +13,7 @@ struct AtmosphereSet;
 impl Plugin for AtmospherePlugin {
     fn build(&self, app: &mut App) {
         app.configure_sets(Update, AtmosphereSet.run_if(in_state(GameState::Game)));
-        app.add_systems(OnEnter(GameState::Game), spawn_atmosphere);
+        app.add_systems(Startup, spawn_atmosphere);
     }
 }
 

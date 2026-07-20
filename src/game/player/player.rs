@@ -1,22 +1,17 @@
-use avian3d::spatial_query::{self, SpatialQuery, SpatialQueryFilter};
+use avian3d::spatial_query::{SpatialQuery, SpatialQueryFilter};
 use bevy::{
-    camera::{CameraMainTextureUsages, Hdr},
-    camera_controller::free_camera::FreeCamera,
+    camera::Hdr,
+    camera_controller::free_camera::{FreeCamera, FreeCameraState},
     core_pipeline::tonemapping::Tonemapping,
     input::keyboard::NativeKeyCode,
     pbr::AtmosphereSettings,
-    post_process::{bloom::Bloom, msaa_writeback},
+    post_process::bloom::Bloom,
     prelude::*,
-    render::render_resource::TextureUsages,
-    solari::realtime::SolariLighting,
 };
 
 use crate::{
     GameState,
-    game::{
-        targets::target::{Target, handle_hit},
-        ui::score::score::{Score, ScoreText},
-    },
+    game::{targets::target::handle_hit, ui::score::score::Score},
 };
 
 #[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]
@@ -27,7 +22,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.configure_sets(Update, PlayerSet.run_if(in_state(GameState::Game)));
-        app.add_systems(OnEnter(GameState::Game), init_player.in_set(PlayerSet))
+        app.add_systems(Startup, init_player)
             .add_systems(Update, make_ray.in_set(PlayerSet));
     }
 }
@@ -44,6 +39,7 @@ fn init_player(mut commands: Commands) {
         Bloom::default(),
         Tonemapping::BlenderFilmic,
         AtmosphereSettings::default(),
+        FreeCameraState::default(),
         FreeCamera {
             key_forward: KeyCode::Unidentified(NativeKeyCode::Unidentified),
             key_up: KeyCode::Unidentified(NativeKeyCode::Unidentified),
