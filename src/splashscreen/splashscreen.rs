@@ -124,7 +124,7 @@ fn cleanup_splash(mut commands: Commands, splash_screen: Query<Entity, With<Spla
 
 fn button_interactions(
     mut state: ResMut<NextState<GameState>>,
-    interaction_button: Query<(&Interaction, &mut Node), Changed<Interaction>>,
+    interaction_button: Query<(&Interaction, &mut Node), (Changed<Interaction>, With<StartButton>)>,
 ) {
     for (interaction, _button_style) in interaction_button {
         match *interaction {

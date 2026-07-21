@@ -3,8 +3,7 @@ use bevy::prelude::*;
 use crate::{
     GameState,
     game::ui::{
-        crosshair::crosshair::CrossHairPlugin,
-        score::score::ScorePlugins,
+        crosshair::crosshair::CrossHairPlugin, score::score::ScorePlugins,
         timer::timer::TimerPlugin,
     },
 };

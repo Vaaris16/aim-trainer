@@ -6,7 +6,8 @@ pub struct CrossHairPlugin;
 
 impl Plugin for CrossHairPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::Game), spawn_crosshair);
+        app.add_systems(OnEnter(GameState::Game), spawn_crosshair)
+            .add_systems(OnExit(GameState::Game), despawn_crosshair);
     }
 }
 
@@ -35,4 +36,10 @@ pub fn spawn_crosshair(assets_server: ResMut<AssetServer>, mut commands: Command
                 ImageNode::new(assets_server.load("crosshair.png")),
             ));
         });
+}
+
+fn despawn_crosshair(crosshair: Query<Entity, With<CrossHair>>, mut commands: Commands) {
+    for entity in crosshair {
+        commands.entity(entity).despawn();
+    }
 }

@@ -17,9 +17,13 @@ impl Plugin for ScorePlugins {
         app.configure_sets(Update, ScoreSet.run_if(in_state(GameState::Game)))
             .insert_resource(Score(0))
             .add_systems(OnEnter(GameState::Game), spawn_score)
+            .add_systems(OnExit(GameState::Game), despawn_score)
             .add_systems(Update, change_score.in_set(ScoreSet));
     }
 }
+
+#[derive(Component)]
+struct ScoreComponent;
 
 pub fn spawn_score(mut commands: Commands) {
     commands
@@ -31,15 +35,18 @@ pub fn spawn_score(mut commands: Commands) {
                     left: px(30),
                     right: px(30),
                 },
-                position_type: PositionType::Absolute,
                 top: px(24),
                 right: px(15),
+
                 justify_content: JustifyContent::Center,
                 flex_direction: FlexDirection::Column,
+                position_type: PositionType::Absolute,
+
                 border: UiRect::all(px(3)),
                 border_radius: BorderRadius::all(px(12)),
                 ..Default::default()
             },
+            ScoreComponent,
             BorderColor::all(ACCENT_COLOR),
             BackgroundColor(UI_BACKGROUND_COLOR),
             BoxShadow(vec![ShadowStyle {
@@ -69,5 +76,11 @@ fn change_score(score: ResMut<Score>, score_text: Query<&mut Text, With<ScoreTex
         for mut text in score_text {
             text.0 = score.0.to_string();
         }
+    }
+}
+
+fn despawn_score(mut commands: Commands, score: Query<Entity, With<ScoreComponent>>) {
+    for entity in score {
+        commands.entity(entity).despawn();
     }
 }

@@ -1,5 +1,5 @@
 use crate::{
-    ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR,
+    ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, end_game,
     game::{ui::score::score::Score, utilities::change_free_camera::disable_free_cam},
 };
 use bevy::prelude::*;
@@ -13,22 +13,32 @@ impl Plugin for EndGamePlugin {
     fn build(&self, app: &mut App) {
         app.configure_sets(Update, EndGameSet.run_if(in_state(GameState::EndGame)))
             .add_systems(OnEnter(GameState::EndGame), spawn_ui)
+            .add_systems(OnExit(GameState::EndGame), clean_up_endgame)
             .add_systems(Update, disable_free_cam.in_set(EndGameSet))
             .add_systems(Update, button_interactions.in_set(EndGameSet));
     }
 }
 
+#[derive(Component)]
+struct EndGameRoot;
+
+#[derive(Component)]
+struct RestartButton;
+
 fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<Score>) {
     let inter_medium: Handle<Font> = assets_server.load("fonts/inter/static/Inter_24pt-Medium.ttf");
 
     commands
-        .spawn(Node {
-            width: percent(100),
-            height: percent(100),
-            justify_content: JustifyContent::Center,
-            align_items: AlignItems::Center,
-            ..Default::default()
-        })
+        .spawn((
+            Node {
+                width: percent(100),
+                height: percent(100),
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                ..Default::default()
+            },
+            EndGameRoot,
+        ))
         .with_children(|parent| {
             parent
                 .spawn((
@@ -99,6 +109,8 @@ fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<
                                 align_items: AlignItems::Center,
                                 ..Default::default()
                             },
+                            Button,
+                            RestartButton,
                             BackgroundColor(UI_BACKGROUND_COLOR),
                             BorderColor::all(ACCENT_COLOR),
                             BoxShadow(vec![ShadowStyle {
@@ -125,6 +137,22 @@ fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<
         });
 }
 
-fn button_interactions() {
-    todo!()
+fn button_interactions(
+    button: Query<&Interaction, (Changed<Interaction>, With<RestartButton>)>,
+    mut state: ResMut<NextState<GameState>>,
+) {
+    for interaction in button {
+        match *interaction {
+            Interaction::Pressed => {
+                state.set(GameState::SplashScreen);
+            }
+            _ => (),
+        }
+    }
+}
+
+fn clean_up_endgame(mut commands: Commands, entity: Query<Entity, With<EndGameRoot>>) {
+    for end_game_entity in entity {
+        commands.entity(end_game_entity).despawn();
+    }
 }

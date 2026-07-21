@@ -24,6 +24,6 @@ impl Plugin for GamePlugin {
                 UiPlugin,
                 LevelPlugin,
             ))
-            .add_systems(Update, enable_free_cam);
+            .add_systems(Update, enable_free_cam.in_set(GamePluginSet));
     }
 }
