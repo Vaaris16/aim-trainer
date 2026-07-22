@@ -1,5 +1,6 @@
 use avian3d::spatial_query::{SpatialQuery, SpatialQueryFilter};
 use bevy::{
+    asset::saver::AssetSaver,
     camera::Hdr,
     camera_controller::free_camera::{FreeCamera, FreeCameraState},
     core_pipeline::tonemapping::Tonemapping,
@@ -11,7 +12,11 @@ use bevy::{
 
 use crate::{
     GameState,
-    game::{targets::target::handle_hit, ui::score::score::Score},
+    game::{
+        bullets::bullets::{BulletTracer, BulletsPlugins},
+        targets::target::handle_hit,
+        ui::score::score::Score,
+    },
 };
 
 #[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]
@@ -23,6 +28,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.configure_sets(Update, PlayerSet.run_if(in_state(GameState::Game)));
         app.add_systems(Startup, init_player)
+            .add_plugins(BulletsPlugins)
             .add_systems(Update, make_ray.in_set(PlayerSet));
     }
 }
@@ -55,8 +61,9 @@ fn init_player(mut commands: Commands) {
 fn make_ray(
     mouse_input: Res<ButtonInput<MouseButton>>,
     spatial_query: SpatialQuery,
-    commands: Commands,
+    mut commands: Commands,
     player: Query<&GlobalTransform, With<Player>>,
+    assets_server: Res<AssetServer>,
     score_query: ResMut<Score>,
 ) {
     if !mouse_input.just_pressed(MouseButton::Right) {
@@ -74,6 +81,14 @@ fn make_ray(
 
         let solid = true;
 
+        let end = ray_origin + ray_dir * 50.0;
+
+        commands.spawn((
+            WorldAssetRoot(assets_server.load("models/Bullet/bullet.glb#Scene0")),
+            Transform::from_translation(ray_origin),
+            BulletTracer::new(ray_origin, end, 300.0),
+        ));
+
         if let Some(first_hit) = spatial_query.cast_ray(
             ray_origin,
             ray_dir.try_into().unwrap(),
@@ -81,7 +96,7 @@ fn make_ray(
             solid,
             &SpatialQueryFilter::default(),
         ) {
-            handle_hit(commands, first_hit.entity, score_query);
+            handle_hit(&mut commands, first_hit.entity, score_query);
         }
     }
 }

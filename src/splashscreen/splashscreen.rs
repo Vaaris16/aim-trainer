@@ -2,7 +2,10 @@ use bevy::{prelude::*, text::LetterSpacing};
 
 use crate::{
     ACCENT_COLOR, GameState, TEXT_COLOR, UI_BACKGROUND_COLOR,
-    game::utilities::change_free_camera::disable_free_cam,
+    game::{
+        targets::target::cleanup_targets, ui::timer::timer::reset_score,
+        utilities::change_free_camera::disable_free_cam,
+    },
 };
 
 #[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
@@ -15,6 +18,8 @@ impl Plugin for SplashScreenPlugin {
         app.configure_sets(Update, SplashSet.run_if(in_state(GameState::SplashScreen)));
         app.add_systems(OnEnter(GameState::SplashScreen), spawn_splashscreen)
             .add_systems(Update, disable_free_cam.in_set(SplashSet))
+            .add_systems(OnEnter(GameState::SplashScreen), reset_score)
+            .add_systems(OnEnter(GameState::SplashScreen), cleanup_targets)
             .add_systems(OnEnter(GameState::Game), cleanup_splash)
             .add_systems(Update, button_interactions.in_set(SplashSet));
     }
@@ -124,9 +129,9 @@ fn cleanup_splash(mut commands: Commands, splash_screen: Query<Entity, With<Spla
 
 fn button_interactions(
     mut state: ResMut<NextState<GameState>>,
-    interaction_button: Query<(&Interaction, &mut Node), (Changed<Interaction>, With<StartButton>)>,
+    interaction_button: Query<&Interaction, (Changed<Interaction>, With<StartButton>)>,
 ) {
-    for (interaction, _button_style) in interaction_button {
+    for interaction in interaction_button {
         match *interaction {
             Interaction::Pressed => {
                 state.set(GameState::Game);

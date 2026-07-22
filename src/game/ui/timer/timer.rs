@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 
-use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR};
+use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, game::ui::score::score::Score};
 
 #[derive(Resource, Debug)]
 struct GameTimer(pub Timer);
@@ -17,7 +17,7 @@ impl Plugin for TimerPlugin {
         app.configure_sets(Update, TimerSet.run_if(in_state(GameState::Game)))
             .add_systems(OnEnter(GameState::Game), spawn_timer)
             .insert_resource(GameTimer(Timer::new(
-                Duration::from_secs(5),
+                Duration::from_secs(15),
                 TimerMode::Once,
             )))
             .add_systems(Update, update_timer.in_set(TimerSet))
@@ -92,9 +92,14 @@ fn update_timer(game_timer: Res<GameTimer>, timer_ui: Query<&mut Text, With<Time
     }
 }
 
-fn timer_end(mut game_state: ResMut<NextState<GameState>>, game_timer: Res<GameTimer>) {
-    if game_timer.0.is_finished() {
+fn timer_end(
+    timer: ResMut<GameTimer>,
+    score: ResMut<Score>,
+    mut game_state: ResMut<NextState<GameState>>,
+) {
+    if timer.0.is_finished() {
         game_state.set(GameState::EndGame);
+        restart_timer(timer);
     }
 }
 
@@ -102,4 +107,12 @@ fn despawn_timer(mut commands: Commands, timer: Query<Entity, With<TimerComponen
     for entity in timer {
         commands.entity(entity).despawn();
     }
+}
+
+fn restart_timer(mut timer: ResMut<GameTimer>) {
+    timer.0.reset();
+}
+
+pub fn reset_score(mut score: ResMut<Score>) {
+    score.0 = 0;
 }

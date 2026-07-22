@@ -2,10 +2,7 @@ use avian3d::collision::collider::Collider;
 use bevy::prelude::*;
 use rand::{RngExt, rngs::ThreadRng};
 
-use crate::{
-    GameState,
-    game::ui::score::score::Score,
-};
+use crate::{GameState, game::ui::score::score::Score};
 
 #[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]
 struct TargetSet;
@@ -73,7 +70,7 @@ fn spawn_target(grid: Res<Grid>, asset_server: Res<AssetServer>, mut commands: C
     }
 }
 
-pub fn handle_hit(mut commands: Commands, entity: Entity, mut score_query: ResMut<Score>) {
+pub fn handle_hit(commands: &mut Commands, entity: Entity, mut score_query: ResMut<Score>) {
     commands.entity(entity).insert(DeadTarget);
     score_query.0 += 50;
 }
@@ -94,5 +91,11 @@ fn manage_dead_targets(
         transform.translation = new_pos;
 
         commands.entity(entity).remove::<DeadTarget>();
+    }
+}
+
+pub fn cleanup_targets(mut commands: Commands, targets: Query<Entity, With<Target>>) {
+    for entity in targets {
+        commands.entity(entity).despawn();
     }
 }
