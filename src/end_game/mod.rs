@@ -1,1 +1,1 @@
-pub mod end_game;
+pub mod end_game_plugin;

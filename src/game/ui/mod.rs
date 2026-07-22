@@ -1,4 +1,4 @@
 pub mod crosshair;
 pub mod score;
 pub mod timer;
-pub mod ui;
+pub mod ui_plugin;

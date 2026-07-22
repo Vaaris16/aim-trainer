@@ -1,1 +1,1 @@
-pub mod crosshair;
+pub mod crosshair_plugin;

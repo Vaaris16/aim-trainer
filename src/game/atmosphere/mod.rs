@@ -1,1 +1,1 @@
-pub mod atmosphere;
+pub mod atmosphere_plugin;

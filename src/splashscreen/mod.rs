@@ -1,1 +1,1 @@
-pub mod splashscreen;
+pub mod splashscreen_plugin;

@@ -1,1 +1,1 @@
-pub mod bullets;
+pub mod bullets_plugin;
