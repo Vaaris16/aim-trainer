@@ -1,4 +1,4 @@
-use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR};
+use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, fonts::fonts::InterFonts};
 use bevy::prelude::*;
 
 #[derive(Component)]
@@ -25,7 +25,7 @@ impl Plugin for ScorePlugins {
 #[derive(Component)]
 struct ScoreComponent;
 
-pub fn spawn_score(mut commands: Commands) {
+pub fn spawn_score(mut commands: Commands, fonts: Res<InterFonts>) {
     commands
         .spawn((
             Node {
@@ -59,11 +59,19 @@ pub fn spawn_score(mut commands: Commands) {
             }]),
         ))
         .with_children(|parent| {
-            parent.spawn((Text::new("Score"),));
+            parent.spawn((
+                Text::new("Score"),
+                TextFont {
+                    font: FontSource::Handle(fonts.inter_medium.clone()),
+                    ..Default::default()
+                },
+            ));
+
             parent.spawn((
                 Text::new("0"),
                 TextFont {
                     font_size: FontSize::Px(48.),
+                    font: FontSource::Handle(fonts.inter_medium.clone()),
                     ..Default::default()
                 },
                 ScoreText,

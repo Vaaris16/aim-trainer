@@ -1,9 +1,10 @@
 use avian3d::PhysicsPlugins;
 use bevy::{camera_controller::free_camera::FreeCameraPlugin, prelude::*};
 
-use crate::{end_game::end_game::EndGamePlugin, game::game::GamePlugin};
+use crate::{end_game::end_game::EndGamePlugin, fonts::fonts::FontsPlugin, game::game::GamePlugin};
 
 mod end_game;
+mod fonts;
 mod game;
 mod splashscreen;
 
@@ -35,6 +36,7 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_plugins(FreeCameraPlugin)
+        .add_plugins(FontsPlugin)
         .add_plugins(PhysicsPlugins::default())
         .init_state::<GameState>()
         .add_plugins((SplashScreenPlugin, GamePlugin, EndGamePlugin))

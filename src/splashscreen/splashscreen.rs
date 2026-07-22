@@ -2,6 +2,7 @@ use bevy::{prelude::*, text::LetterSpacing};
 
 use crate::{
     ACCENT_COLOR, GameState, TEXT_COLOR, UI_BACKGROUND_COLOR,
+    fonts::fonts::InterFonts,
     game::{
         targets::target::cleanup_targets, ui::timer::timer::reset_score,
         utilities::change_free_camera::disable_free_cam,
@@ -31,9 +32,7 @@ pub struct StartButton;
 #[derive(Component)]
 struct SplashScreenRoot;
 
-fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>) {
-    let inter_medium: Handle<Font> = assets_server.load("fonts/inter/static/Inter_24pt-Medium.ttf");
-
+fn spawn_splashscreen(mut commands: Commands, fonts: Res<InterFonts>) {
     commands
         .spawn((
             Node {
@@ -64,7 +63,7 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                         Text::new("AIM"),
                         TextFont {
                             font_size: FontSize::Px(132.),
-                            font: FontSource::Handle(inter_medium.clone()),
+                            font: FontSource::Handle(fonts.inter_medium.clone()),
                             ..Default::default()
                         },
                         TextColor(TEXT_COLOR),
@@ -74,7 +73,7 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                         Text::new("Trainer"),
                         TextFont {
                             font_size: FontSize::Px(64.),
-                            font: FontSource::Handle(inter_medium.clone()),
+                            font: FontSource::Handle(fonts.inter_medium.clone()),
                             ..Default::default()
                         },
                         TextColor(TEXT_COLOR),
@@ -113,7 +112,7 @@ fn spawn_splashscreen(mut commands: Commands, assets_server: ResMut<AssetServer>
                         TextColor(TEXT_COLOR),
                         TextFont {
                             font_size: FontSize::Px(32.),
-                            font: FontSource::Handle(inter_medium.clone()),
+                            font: FontSource::Handle(fonts.inter_medium.clone()),
                             ..Default::default()
                         },
                     ));

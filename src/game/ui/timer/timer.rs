@@ -2,7 +2,10 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 
-use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, game::ui::score::score::Score};
+use crate::{
+    ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, fonts::fonts::InterFonts,
+    game::ui::score::score::Score,
+};
 
 #[derive(Resource, Debug)]
 struct GameTimer(pub Timer);
@@ -37,7 +40,7 @@ fn tick_timer(time: Res<Time>, mut timer: ResMut<GameTimer>) {
     timer.0.tick(time.delta());
 }
 
-fn spawn_timer(mut commands: Commands) {
+fn spawn_timer(mut commands: Commands, fonts: Res<InterFonts>) {
     commands
         .spawn((
             Node {
@@ -70,14 +73,22 @@ fn spawn_timer(mut commands: Commands) {
             BackgroundColor(UI_BACKGROUND_COLOR),
         ))
         .with_children(|timer_text| {
-            timer_text.spawn(Text::new("Time"));
             timer_text.spawn((
+                Text::new("Time"),
+                TextFont {
+                    font: FontSource::Handle(fonts.inter_medium.clone()),
+                    ..Default::default()
+                },
+            ));
+
+            timer_text.spawn((
+                TimerUi,
                 Text::new("15"),
                 TextFont {
                     font_size: FontSize::Px(48.),
+                    font: FontSource::Handle(fonts.inter_medium.clone()),
                     ..Default::default()
                 },
-                TimerUi,
             ));
         });
 }
@@ -92,11 +103,7 @@ fn update_timer(game_timer: Res<GameTimer>, timer_ui: Query<&mut Text, With<Time
     }
 }
 
-fn timer_end(
-    timer: ResMut<GameTimer>,
-    score: ResMut<Score>,
-    mut game_state: ResMut<NextState<GameState>>,
-) {
+fn timer_end(timer: ResMut<GameTimer>, mut game_state: ResMut<NextState<GameState>>) {
     if timer.0.is_finished() {
         game_state.set(GameState::EndGame);
         restart_timer(timer);
