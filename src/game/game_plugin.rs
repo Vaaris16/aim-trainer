@@ -1,10 +1,10 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, ui::UiPlugin};
 
 use crate::{
     GameState,
     game::{
-        atmosphere::atmosphere::AtmospherePlugin, level::level::LevelPlugin,
-        player::player::PlayerPlugin, targets::target::TargetPlugin, ui::ui::UiPlugin,
+        atmosphere::atmosphere_plugin::AtmospherePlugin, level::level_plugin::LevelPlugin,
+        player::player_plugin::PlayerPlugin, targets::target_plugin::TargetPlugin,
         utilities::change_free_camera::enable_free_cam,
     },
 };

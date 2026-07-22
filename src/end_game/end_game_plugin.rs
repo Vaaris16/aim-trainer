@@ -1,6 +1,6 @@
 use crate::{
     ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR,
-    game::{ui::score::score::Score, utilities::change_free_camera::disable_free_cam},
+    game::{ui::score::score_plugin::Score, utilities::change_free_camera::disable_free_cam},
 };
 use bevy::prelude::*;
 

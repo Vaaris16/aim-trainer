@@ -1,14 +1,15 @@
 use avian3d::PhysicsPlugins;
 use bevy::{camera_controller::free_camera::FreeCameraPlugin, prelude::*};
 
-use crate::{end_game::end_game::EndGamePlugin, fonts::fonts::FontsPlugin, game::game::GamePlugin};
-
 mod end_game;
 mod fonts;
 mod game;
 mod splashscreen;
 
-use splashscreen::splashscreen::SplashScreenPlugin;
+use crate::{
+    end_game::end_game_plugin::EndGamePlugin, fonts::fonts_plugin::FontsPlugin,
+    game::game_plugin::GamePlugin, splashscreen::splashscreen_plugin::SplashScreenPlugin,
+};
 
 pub const UI_BACKGROUND_COLOR: Color = Color::hsl(212., 0.25, 0.13);
 pub const ACCENT_COLOR: Color = Color::hsl(199., 0.95, 0.75);

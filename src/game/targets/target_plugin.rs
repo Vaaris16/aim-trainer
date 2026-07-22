@@ -2,7 +2,7 @@ use avian3d::collision::collider::Collider;
 use bevy::prelude::*;
 use rand::{RngExt, rngs::ThreadRng};
 
-use crate::{GameState, game::ui::score::score::Score};
+use crate::{GameState, game::ui::score::score_plugin::Score};
 
 #[derive(SystemSet, PartialEq, Eq, Hash, Clone, Debug)]
 struct TargetSet;

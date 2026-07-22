@@ -2,9 +2,9 @@ use bevy::{prelude::*, text::LetterSpacing};
 
 use crate::{
     ACCENT_COLOR, GameState, TEXT_COLOR, UI_BACKGROUND_COLOR,
-    fonts::fonts::InterFonts,
+    fonts::fonts_plugin::InterFonts,
     game::{
-        targets::target::cleanup_targets, ui::timer::timer::reset_score,
+        targets::target_plugin::cleanup_targets, ui::timer::timer_plugin::reset_score,
         utilities::change_free_camera::disable_free_cam,
     },
 };

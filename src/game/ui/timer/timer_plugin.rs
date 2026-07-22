@@ -3,8 +3,8 @@ use std::time::Duration;
 use bevy::prelude::*;
 
 use crate::{
-    ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, fonts::fonts::InterFonts,
-    game::ui::score::score::Score,
+    ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, fonts::fonts_plugin::InterFonts,
+    game::ui::score::score_plugin::Score,
 };
 
 #[derive(Resource, Debug)]

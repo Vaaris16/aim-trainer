@@ -1,6 +1,5 @@
 use avian3d::spatial_query::{SpatialQuery, SpatialQueryFilter};
 use bevy::{
-    asset::saver::AssetSaver,
     camera::Hdr,
     camera_controller::free_camera::{FreeCamera, FreeCameraState},
     core_pipeline::tonemapping::Tonemapping,
@@ -13,9 +12,9 @@ use bevy::{
 use crate::{
     GameState,
     game::{
-        bullets::bullets::{BulletTracer, BulletsPlugins},
-        targets::target::handle_hit,
-        ui::score::score::Score,
+        bullets::bullets_plugin::{BulletTracer, BulletsPlugins},
+        targets::target_plugin::handle_hit,
+        ui::score::score_plugin::Score,
     },
 };
 

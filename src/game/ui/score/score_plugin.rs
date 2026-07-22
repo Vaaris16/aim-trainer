@@ -1,4 +1,4 @@
-use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, fonts::fonts::InterFonts};
+use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, fonts::fonts_plugin::InterFonts};
 use bevy::prelude::*;
 
 #[derive(Component)]
