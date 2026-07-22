@@ -103,7 +103,6 @@ fn spawn_splashscreen(mut commands: Commands, fonts: Res<InterFonts>) {
                         blur_radius: px(1),
                         x_offset: px(0),
                         y_offset: px(0),
-                        ..Default::default()
                     }]),
                 ))
                 .with_children(|button| {
@@ -128,14 +127,22 @@ fn cleanup_splash(mut commands: Commands, splash_screen: Query<Entity, With<Spla
 
 fn button_interactions(
     mut state: ResMut<NextState<GameState>>,
-    interaction_button: Query<&Interaction, (Changed<Interaction>, With<StartButton>)>,
+    interaction_button: Query<
+        (&Interaction, &mut UiTransform),
+        (Changed<Interaction>, With<StartButton>),
+    >,
 ) {
-    for interaction in interaction_button {
+    for (interaction, mut ui_trans) in interaction_button {
         match *interaction {
             Interaction::Pressed => {
                 state.set(GameState::Game);
             }
-            _ => (),
+            Interaction::Hovered => {
+                ui_trans.scale = Vec2::splat(1.05);
+            }
+            Interaction::None => {
+                ui_trans.scale = Vec2::splat(1.);
+            }
         }
     }
 }

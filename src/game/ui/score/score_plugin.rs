@@ -55,7 +55,6 @@ pub fn spawn_score(mut commands: Commands, fonts: Res<InterFonts>) {
                 blur_radius: px(5),
                 x_offset: px(0),
                 y_offset: px(0),
-                ..Default::default()
             }]),
         ))
         .with_children(|parent| {

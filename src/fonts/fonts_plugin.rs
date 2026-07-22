@@ -9,6 +9,7 @@ impl Plugin for FontsPlugin {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Resource)]
 pub struct InterFonts {
     pub inter_thin: Handle<Font>,

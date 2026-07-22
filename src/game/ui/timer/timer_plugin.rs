@@ -68,7 +68,6 @@ fn spawn_timer(mut commands: Commands, fonts: Res<InterFonts>) {
                 blur_radius: px(5),
                 x_offset: px(0),
                 y_offset: px(0),
-                ..Default::default()
             }]),
             BackgroundColor(UI_BACKGROUND_COLOR),
         ))

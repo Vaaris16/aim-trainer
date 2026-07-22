@@ -1,3 +1,4 @@
+#![allow(clippy::type_complexity)]
 use avian3d::PhysicsPlugins;
 use bevy::{camera_controller::free_camera::FreeCameraPlugin, prelude::*};
 

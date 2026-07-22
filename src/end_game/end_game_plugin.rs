@@ -64,7 +64,6 @@ fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<
                         blur_radius: px(5),
                         x_offset: px(0),
                         y_offset: px(0),
-                        ..Default::default()
                     }]),
                 ))
                 .with_children(|main_box| {
@@ -119,7 +118,6 @@ fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<
                                 blur_radius: px(2),
                                 x_offset: px(0),
                                 y_offset: px(0),
-                                ..Default::default()
                             }]),
                         ))
                         .with_children(|button| {
@@ -138,15 +136,20 @@ fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<
 }
 
 fn button_interactions(
-    button: Query<&Interaction, (Changed<Interaction>, With<RestartButton>)>,
+    button: Query<(&Interaction, &mut UiTransform), (Changed<Interaction>, With<RestartButton>)>,
     mut state: ResMut<NextState<GameState>>,
 ) {
-    for interaction in button {
+    for (interaction, mut ui_trans) in button {
         match *interaction {
             Interaction::Pressed => {
                 state.set(GameState::SplashScreen);
             }
-            _ => (),
+            Interaction::Hovered => {
+                ui_trans.scale = Vec2::splat(1.05);
+            }
+            Interaction::None => {
+                ui_trans.scale = Vec2::splat(1.);
+            }
         }
     }
 }
