@@ -3,10 +3,8 @@ use bevy::{prelude::*, text::LetterSpacing};
 use crate::{
     ACCENT_COLOR, GameState, TEXT_COLOR, UI_BACKGROUND_COLOR,
     fonts::fonts_plugin::InterFonts,
-    game::{
-        targets::target_plugin::cleanup_targets, ui::timer::timer_plugin::reset_score,
-        utilities::change_free_camera::disable_free_cam,
-    },
+    game::{targets::target_plugin::cleanup_targets, ui::timer::timer_plugin::reset_score},
+    utilities::{change_free_camera::disable_free_cam, spawn_text::SpawnText},
 };
 
 #[derive(SystemSet, Debug, Clone, PartialEq, Eq, Hash)]
@@ -59,26 +57,26 @@ fn spawn_splashscreen(mut commands: Commands, fonts: Res<InterFonts>) {
                     ..Default::default()
                 },))
                 .with_children(|text| {
-                    text.spawn((
-                        Text::new("AIM"),
-                        TextFont {
-                            font_size: FontSize::Px(132.),
-                            font: FontSource::Handle(fonts.inter_medium.clone()),
-                            ..Default::default()
-                        },
-                        TextColor(TEXT_COLOR),
-                        LetterSpacing::Px(20.),
-                    ));
-                    text.spawn((
-                        Text::new("Trainer"),
-                        TextFont {
-                            font_size: FontSize::Px(64.),
-                            font: FontSource::Handle(fonts.inter_medium.clone()),
-                            ..Default::default()
-                        },
-                        TextColor(TEXT_COLOR),
-                        LetterSpacing::Px(15.),
-                    ));
+                    text.spawn(
+                        SpawnText::new(
+                            String::from("AIM"),
+                            fonts.inter_medium.clone(),
+                            Some(132.),
+                            TEXT_COLOR,
+                            Some(20.),
+                        )
+                        .spawn_text(),
+                    );
+                    text.spawn(
+                        SpawnText::new(
+                            String::from("Trainer"),
+                            fonts.inter_medium.clone(),
+                            Some(64.),
+                            TEXT_COLOR,
+                            Some(15.),
+                        )
+                        .spawn_text(),
+                    );
                 });
             // Button
             parent
@@ -106,15 +104,16 @@ fn spawn_splashscreen(mut commands: Commands, fonts: Res<InterFonts>) {
                     }]),
                 ))
                 .with_children(|button| {
-                    button.spawn((
-                        Text::new("START"),
-                        TextColor(TEXT_COLOR),
-                        TextFont {
-                            font_size: FontSize::Px(32.),
-                            font: FontSource::Handle(fonts.inter_medium.clone()),
-                            ..Default::default()
-                        },
-                    ));
+                    button.spawn(
+                        SpawnText::new(
+                            String::from("START"),
+                            fonts.inter_medium.clone(),
+                            Some(32.),
+                            TEXT_COLOR,
+                            Some(5.),
+                        )
+                        .spawn_text(),
+                    );
                 });
         });
 }

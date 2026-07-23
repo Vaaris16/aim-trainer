@@ -1,10 +1,10 @@
 use std::time::Duration;
 
-use bevy::prelude::*;
+use bevy::{log::tracing::Instrument, prelude::*};
 
 use crate::{
-    ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, fonts::fonts_plugin::InterFonts,
-    game::ui::score::score_plugin::Score,
+    ACCENT_COLOR, GameState, TEXT_COLOR, UI_BACKGROUND_COLOR, fonts::fonts_plugin::InterFonts,
+    game::ui::score::score_plugin::Score, utilities::spawn_text::SpawnText,
 };
 
 #[derive(Resource, Debug)]
@@ -72,22 +72,27 @@ fn spawn_timer(mut commands: Commands, fonts: Res<InterFonts>) {
             BackgroundColor(UI_BACKGROUND_COLOR),
         ))
         .with_children(|timer_text| {
-            timer_text.spawn((
-                Text::new("Time"),
-                TextFont {
-                    font: FontSource::Handle(fonts.inter_medium.clone()),
-                    ..Default::default()
-                },
-            ));
+            timer_text.spawn(
+                SpawnText::new(
+                    String::from("Time"),
+                    fonts.inter_medium.clone(),
+                    None,
+                    TEXT_COLOR,
+                    None,
+                )
+                .spawn_text(),
+            );
 
             timer_text.spawn((
+                SpawnText::new(
+                    String::from("15"),
+                    fonts.inter_medium.clone(),
+                    Some(48.),
+                    TEXT_COLOR,
+                    None,
+                )
+                .spawn_text(),
                 TimerUi,
-                Text::new("15"),
-                TextFont {
-                    font_size: FontSize::Px(48.),
-                    font: FontSource::Handle(fonts.inter_medium.clone()),
-                    ..Default::default()
-                },
             ));
         });
 }

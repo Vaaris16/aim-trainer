@@ -5,8 +5,9 @@ use crate::{
     game::{
         atmosphere::atmosphere_plugin::AtmospherePlugin, level::level_plugin::LevelPlugin,
         player::player_plugin::PlayerPlugin, targets::target_plugin::TargetPlugin,
-        ui::ui_plugin::UiPlugin, utilities::change_free_camera::enable_free_cam,
+        ui::ui_plugin::UiPlugin,
     },
+    utilities::change_free_camera::enable_free_cam,
 };
 
 pub struct GamePlugin;

@@ -6,6 +6,7 @@ mod end_game;
 mod fonts;
 mod game;
 mod splashscreen;
+mod utilities;
 
 use crate::{
     end_game::end_game_plugin::EndGamePlugin, fonts::fonts_plugin::FontsPlugin,

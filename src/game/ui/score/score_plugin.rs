@@ -1,4 +1,7 @@
-use crate::{ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR, fonts::fonts_plugin::InterFonts};
+use crate::{
+    ACCENT_COLOR, GameState, TEXT_COLOR, UI_BACKGROUND_COLOR, fonts::fonts_plugin::InterFonts,
+    utilities::spawn_text::SpawnText,
+};
 use bevy::prelude::*;
 
 #[derive(Component)]
@@ -58,21 +61,26 @@ pub fn spawn_score(mut commands: Commands, fonts: Res<InterFonts>) {
             }]),
         ))
         .with_children(|parent| {
-            parent.spawn((
-                Text::new("Score"),
-                TextFont {
-                    font: FontSource::Handle(fonts.inter_medium.clone()),
-                    ..Default::default()
-                },
-            ));
+            parent.spawn(
+                SpawnText::new(
+                    String::from("Score"),
+                    fonts.inter_medium.clone(),
+                    None,
+                    TEXT_COLOR,
+                    None,
+                )
+                .spawn_text(),
+            );
 
             parent.spawn((
-                Text::new("0"),
-                TextFont {
-                    font_size: FontSize::Px(48.),
-                    font: FontSource::Handle(fonts.inter_medium.clone()),
-                    ..Default::default()
-                },
+                SpawnText::new(
+                    String::from("0"),
+                    fonts.inter_medium.clone(),
+                    Some(48.),
+                    TEXT_COLOR,
+                    Some(0.),
+                )
+                .spawn_text(),
                 ScoreText,
             ));
         });

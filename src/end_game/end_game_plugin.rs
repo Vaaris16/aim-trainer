@@ -1,6 +1,8 @@
 use crate::{
-    ACCENT_COLOR, GameState, UI_BACKGROUND_COLOR,
-    game::{ui::score::score_plugin::Score, utilities::change_free_camera::disable_free_cam},
+    ACCENT_COLOR, GameState, TEXT_COLOR, UI_BACKGROUND_COLOR,
+    fonts::fonts_plugin::InterFonts,
+    game::ui::score::score_plugin::Score,
+    utilities::{change_free_camera::disable_free_cam, spawn_text::SpawnText},
 };
 use bevy::prelude::*;
 
@@ -25,9 +27,7 @@ struct EndGameRoot;
 #[derive(Component)]
 struct RestartButton;
 
-fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<Score>) {
-    let inter_medium: Handle<Font> = assets_server.load("fonts/inter/static/Inter_24pt-Medium.ttf");
-
+fn spawn_ui(mut commands: Commands, score: Res<Score>, fonts: Res<InterFonts>) {
     commands
         .spawn((
             Node {
@@ -68,24 +68,27 @@ fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<
                 ))
                 .with_children(|main_box| {
                     // Spawn "score" text
-                    main_box.spawn((
-                        Text::new("Final Score"),
-                        TextColor(ACCENT_COLOR),
-                        TextFont {
-                            font_size: FontSize::Px(25.),
-                            font: FontSource::Handle(inter_medium.clone()),
-                            ..Default::default()
-                        },
-                    ));
+                    main_box.spawn(
+                        SpawnText::new(
+                            String::from("Final Score"),
+                            fonts.inter_medium.clone(),
+                            Some(25.),
+                            ACCENT_COLOR,
+                            None,
+                        )
+                        .spawn_text(),
+                    );
 
                     // Spawn score
                     main_box.spawn((
-                        Text::new(score.0.to_string()),
-                        TextFont {
-                            font_size: FontSize::Px(120.),
-                            font: FontSource::Handle(inter_medium.clone()),
-                            ..Default::default()
-                        },
+                        SpawnText::new(
+                            String::from(score.0.to_string()),
+                            fonts.inter_medium.clone(),
+                            Some(120.),
+                            ACCENT_COLOR,
+                            None,
+                        )
+                        .spawn_text(),
                         Node {
                             margin: UiRect::top(px(45.)),
                             ..default()
@@ -121,15 +124,16 @@ fn spawn_ui(assets_server: Res<AssetServer>, mut commands: Commands, score: Res<
                             }]),
                         ))
                         .with_children(|button| {
-                            button.spawn((
-                                Text::new("Restart"),
-                                TextColor(ACCENT_COLOR),
-                                TextFont {
-                                    font_size: FontSize::Px(30.),
-                                    font: FontSource::Handle(inter_medium.clone()),
-                                    ..Default::default()
-                                },
-                            ));
+                            button.spawn(
+                                SpawnText::new(
+                                    String::from("Restart"),
+                                    fonts.inter_medium.clone(),
+                                    Some(30.),
+                                    ACCENT_COLOR,
+                                    None,
+                                )
+                                .spawn_text(),
+                            );
                         });
                 });
         });
