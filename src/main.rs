@@ -1,6 +1,10 @@
 #![allow(clippy::type_complexity)]
 use avian3d::PhysicsPlugins;
-use bevy::{camera_controller::free_camera::FreeCameraPlugin, prelude::*};
+use bevy::{
+    camera_controller::free_camera::FreeCameraPlugin, prelude::*,
+    render::render_resource::TextureSampleType,
+};
+use bevy_tape::TapePlugin;
 
 mod end_game;
 mod fonts;
@@ -39,6 +43,7 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_plugins(FreeCameraPlugin)
+        .add_plugins(TapePlugin)
         .add_plugins(FontsPlugin)
         .add_plugins(PhysicsPlugins::default())
         .init_state::<GameState>()

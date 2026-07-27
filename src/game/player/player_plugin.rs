@@ -8,6 +8,7 @@ use bevy::{
     post_process::bloom::Bloom,
     prelude::*,
 };
+use bevy_tape::{TapePlugin, record_component::record::RecordScreen};
 
 use crate::{
     GameState,
@@ -42,6 +43,7 @@ fn init_player(mut commands: Commands) {
         Hdr,
         Transform::from_xyz(2.0, 1.5, 0.0).looking_to(Vec3::X, Vec3::Y),
         Bloom::default(),
+        RecordScreen::default(),
         Tonemapping::BlenderFilmic,
         AtmosphereSettings::default(),
         FreeCameraState::default(),

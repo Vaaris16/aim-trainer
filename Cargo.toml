@@ -6,4 +6,5 @@ edition = "2024"
 [dependencies]
 avian3d = "0.7.0"
 bevy = { version = "0.19", features = ["debug", "free_camera", "jpeg", "bevy_solari"]}
+bevy_tape = "0.1.1"
 rand = "0.10.1"
